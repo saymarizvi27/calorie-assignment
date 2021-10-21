@@ -6,8 +6,7 @@ function createHash(password) {
 }
 
 function compareHash(password, hash) {
-    let tempHash = this.createHash(password);
-    return bcrypt.compareSync(password, tempHash)
+    return bcrypt.compareSync(password, hash);
 }
 
 module.exports = {

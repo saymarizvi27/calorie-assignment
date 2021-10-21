@@ -2,9 +2,9 @@ const jwt = require('jsonwebtoken');
 
 function generateToken(id) {
     const token = jwt.sign({ _id: id }, 'secretkey', {
-        expiresIn: '24h', // expires in 24 hours
+        expiresIn: '1h', // expires in 24 hours
     });
-    return token;
+    return 'Bearer '+ token;
 }
 
 function getDataFromToken(request, response) {
