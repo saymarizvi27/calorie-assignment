@@ -1,5 +1,4 @@
-let redis = require('redis');
-require('dotenv').config();
+let redis = require('async-redis');
 
 let redisClient;
 
@@ -14,7 +13,9 @@ async function redisConnect() {
 }
 async function checkUser(token) {
     try {
-        await redisClient.get(token);
+        const token1 =  await redisClient.get(token.toString());
+        console.log(token1);
+        return token1;
     } catch (e) {
         throw new Error('Error getting the user from redis ');
     }

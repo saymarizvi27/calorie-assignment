@@ -1,24 +1,34 @@
 const jwt = require('jsonwebtoken');
+const { checkUser } = require('./redis');
 
 function generateToken(id) {
     const token = jwt.sign({ _id: id }, 'secretkey', {
-        expiresIn: '1h', // expires in 24 hours
+        expiresIn: '1h', // expires in 1 hours
     });
-    return 'Bearer '+ token;
+    return 'Bearer ' + token;
 }
 
-function getDataFromToken(request, response) {
+async function verifyAuth(req, res, next) {
     try {
-        const usertoken = request.header('authorization');
+        const usertoken = req.header('authorization').replace(/^Bearer\s+/, "");
         const decoded = jwt.verify(usertoken, 'secretkey');
-        return decoded;
+        console.log(decoded);
+        const user = await checkUser(req.header('authorization'));
+        if (!user){
+            return res.status(301).json({
+                error: 'UnAuthorized Access',
+            });
+        }
     } catch (e) {
-        response.statusCode = 301;
- 
+        console.log(e,"error")
+        return res.status(301).json({
+            error: 'UnAuthorized Access',
+        });
+
     }
 }
 
 module.exports = {
     generateToken,
-    getDataFromToken
+    verifyAuth
 }
