@@ -26,9 +26,20 @@ async function ifMealExist(id) {
     return await MealScheme.findOne({ id: new ObjectId(id) });
 }
 
+
+async function updateMeal(id, text, calorie) {
+    var ObjectId = require('mongoose').Types.ObjectId;
+    const updatedMeal = await launches.updateOne(
+        { id: new ObjectId(id) }, {
+            text: text,
+            calorie: calorie,
+        })
+    return updatedMeal;
+}
+
 module.exports = {
     createMeal,
     deleteMeal,
     ifMealExist,
-    editMeal
+    updateMeal
 }
