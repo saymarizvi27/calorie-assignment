@@ -6,6 +6,7 @@ async function redisConnect() {
     try {
         redisClient = await redis.createClient
             (process.env.REDIS_PORT, process.env.REDIS_URL, { no_ready_check: true });
+        redisClient.on('error', (err) => console.log('Redis Client Error', err));    
         await redisClient.auth(process.env.REDIS_PASSWORD);
     } catch (e) {
         throw new Error('Error connecting the database');

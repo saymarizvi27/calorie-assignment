@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const UserSchema = require('./mongo.user');
 
 async function createUser(userDetails) {
@@ -9,11 +10,18 @@ async function createUser(userDetails) {
     }
 }
 
-async function ifUserExists(email) {
-    return await UserSchema.findOne({ email: email });
+async function ifUserExists(query) {
+    console.log(query,"query");
+    return await UserSchema.findOne(query);
 }
+async function ifUserExistsById(id) {
+    var ObjectId = require('mongoose').Types.ObjectId; 
+    return await UserSchema.findOne({ id : new ObjectId(id) });
+}
+
 
 module.exports = {
     createUser,
-    ifUserExists
+    ifUserExists,
+    ifUserExistsById
 }
