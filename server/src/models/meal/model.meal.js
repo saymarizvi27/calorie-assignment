@@ -8,16 +8,12 @@ const MealSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    target: {
+    user: {
         ref: 'User',
         required: true,
         type: mongoose.ObjectId,
     },
-    password: {
-        type: String,
-        required: true
-    },
-    date: {
+    createdDate: {
         type: Date,
         default: Date.now
     }
