@@ -39,7 +39,7 @@ async function httpDeleteMeal(req, res) {
             });
         }
         if (meal.user !== userId) {
-            return res.status(404).json({
+            return res.status(403).json({
                 error: 'Access Denied',
             });
         }
@@ -85,7 +85,7 @@ async function httpUpdateMeal(req, res) {
             });
         }
         if (meal.user !== userId) {
-            return res.status(404).json({
+            return res.status(403).json({
                 error: 'Access Denied',
             });
         }

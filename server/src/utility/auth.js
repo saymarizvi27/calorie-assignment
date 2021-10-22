@@ -14,14 +14,14 @@ async function verifyAuth(req, res, next) {
         const decoded = jwt.verify(usertoken, 'secretkey');
         const user = await checkUser(req.header('authorization'));
         if (!user){
-            return res.status(301).json({
+            return res.status(401).json({
                 error: 'UnAuthorized Access',
             });
         }
         req.user = user;
         next();
     } catch (e) {
-        return res.status(301).json({
+        return res.status(401).json({
             error: 'UnAuthorized Access',
         });
 
