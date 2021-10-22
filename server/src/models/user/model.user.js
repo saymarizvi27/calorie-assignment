@@ -16,7 +16,11 @@ async function ifUserExists(query) {
 }
 async function ifUserExistsById(id) {
     var ObjectId = require('mongoose').Types.ObjectId;
-    return await UserSchema.findOne({ id: new ObjectId(id) });
+    return await UserSchema.findOne({ id: new ObjectId(id) }, {
+        '_id': 0,
+        '__v': 0,
+        'password': 0
+    });
 }
 
 

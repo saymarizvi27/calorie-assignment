@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
-const MealScheme = require('./mongo.user');
+const MealScheme = require('./mongo.meal');
 
 
 async function createMeal(meal) {
     try {
-        await MealScheme.create(meal);
+        return await MealScheme.create(meal);
     }
     catch (err) {
         console.error(`Could not create meal ${err}`)

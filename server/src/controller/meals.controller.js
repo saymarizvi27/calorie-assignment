@@ -56,7 +56,7 @@ async function httpDeleteMeal(req, res) {
         }
         else {
             return res.status(404).json({
-                error: 'Could ot delete user ',
+                error: 'Could not delete user ',
             });
         }
     }
@@ -117,5 +117,6 @@ async function httpUpdateMeal(req, res) {
 module.exports = {
     httpCreateMeal,
     httpDeleteMeal,
-    httpUpdateMeal
+    httpUpdateMeal,
+    // httpGetMeal
 }

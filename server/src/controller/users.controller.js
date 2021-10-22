@@ -1,4 +1,4 @@
-const { createUser, ifUserExists , ifUserExistsById } = require('../models/user/model.user');
+const { createUser, ifUserExists, ifUserExistsById } = require('../models/user/model.user');
 const { createHash, compareHash } = require('../utility/password');
 const { generateToken } = require('../utility/auth');
 const { saveUser, checkUser } = require('../utility/redis');
@@ -23,7 +23,7 @@ async function httpUserSignUp(req, res) {
         await createUser(userDetails);
         return res.status(201).json
             ({
-                data: userDetails,
+                data: '',
                 code: 201,
                 message: 'user created succesfully',
                 error: false
@@ -61,8 +61,6 @@ async function httpUserLogin(req, res) {
                 error: 'Email or Password is Invalid',
             });
         }
-        console.log('this is user', user);
-
         const token = generateToken(user._id.toString());
         await saveUser(user._id.toString(), token);
         return res.status(200).json
@@ -81,24 +79,33 @@ async function httpUserLogin(req, res) {
     }
 }
 
-// async function httpUserDetails(req,res){
+async function httpUserDetails(req, res) {
+    try {
+        const userId = req.body.userId;
+        const user = await ifUserExistsById(userId);
+        if (user) {
+            return res.status(200).json
+                ({
+                    data: user,
+                    code: 200,
+                    message: 'User Details',
+                    error: false
+                });
+        }
+        else {
+            return res.status(400).json({
+                error: 'Could not find user id',
+            });
+        }
+    }
+    catch (e) {
+        console.log(e, "ERROR")
+        return res.status(500).json({
+            error: 'Internal server error ',
+        });
+    }
 
-//     const userId = req.body.userId;
-//     console.log()
-//     const user = await ifUserExistsById(userId);
-//     console.log(user)
-//     if (user){
-//         return res.status(200).json
-//         ({
-//             data: user,
-//             code: 200,
-//             message: 'User Details',
-//             error: false
-//         });
-//     }
-   
-
-// }
+}
 
 module.exports = {
     httpUserSignUp,
