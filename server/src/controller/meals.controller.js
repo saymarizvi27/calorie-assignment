@@ -1,16 +1,16 @@
-const { createUser, ifUserExists , ifUserExistsById } = require('../models/user/model.user');
+const { createMeal } = require('../models/user/model.meal');
 
 async function httpCreateMeal(req, res) {
     try {
         const userId = req.body.userId;
         const mealDetails = req.body;
-        if (!mealDetails.text || !mealDetails.calorie) {
+        if (!mealDetails.description || !mealDetails.calorie || !mealDetails.name) {
             return res.status(400).json({
                 error: 'Missing required property',
             });
         }
-       
-        await createUser(mealDetails);
+        mealDetails.user = userId;
+        await createMeal(mealDetails);
         return res.status(201).json
             ({
                 data: mealDetails,
@@ -25,4 +25,9 @@ async function httpCreateMeal(req, res) {
             error: 'Internal server error ',
         });
     }
+}
+
+
+module.exports = {
+    httpCreateMeal
 }
