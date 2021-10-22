@@ -1,17 +1,23 @@
 const mongoose = require('mongoose');
-const MealScheme = require('./mongo.user');
-
-
-async function createMeal(meal) {
-    try {
-        await MealScheme.create(meal);
+const MealSchema = new mongoose.Schema({
+    text: {
+        type: String,
+        required: true
+    },
+    calorie: {
+        type: Number,
+        required: true
+    },
+    user: {
+        ref: 'User',
+        required: true,
+        type: mongoose.ObjectId,
+    },
+    createdDate: {
+        type: Date,
+        default: Date.now
     }
-    catch (err) {
-        console.error(`Could not create meal ${err}`)
-    }
-}
+});
+const Meal = mongoose.model('Meal', MealSchema);
 
-
-module.exports = {
-    createMeal
-}
+module.exports = Meal;

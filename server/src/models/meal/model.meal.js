@@ -1,23 +1,34 @@
 const mongoose = require('mongoose');
-const MealSchema = new mongoose.Schema({
-    text: {
-        type: String,
-        required: true
-    },
-    calorie: {
-        type: Number,
-        required: true
-    },
-    user: {
-        ref: 'User',
-        required: true,
-        type: mongoose.ObjectId,
-    },
-    createdDate: {
-        type: Date,
-        default: Date.now
-    }
-});
-const Meal = mongoose.model('Meal', MealSchema);
+const MealScheme = require('./mongo.user');
 
-module.exports = Meal;
+
+async function createMeal(meal) {
+    try {
+        await MealScheme.create(meal);
+    }
+    catch (err) {
+        console.error(`Could not create meal ${err}`)
+    }
+}
+
+async function deleteMeal(id) {
+    try {
+        var ObjectId = require('mongoose').Types.ObjectId;
+        return await MealScheme.findOneAndDelete({ id: new ObjectId(id) });
+    }
+    catch (err) {
+        console.error(`Could not delete meal ${err}`)
+    }
+}
+
+async function ifMealExist(id) {
+    var ObjectId = require('mongoose').Types.ObjectId;
+    return await MealScheme.findOne({ id: new ObjectId(id) });
+}
+
+module.exports = {
+    createMeal,
+    deleteMeal,
+    ifMealExist,
+    editMeal
+}

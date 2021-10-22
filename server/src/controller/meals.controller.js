@@ -1,4 +1,4 @@
-const { createMeal } = require('../models/user/model.meal');
+const { createMeal, deleteMeal, ifMealExist , editMeal } = require('../models/meal/model.meal');
 
 async function httpCreateMeal(req, res) {
     try {
@@ -27,7 +27,35 @@ async function httpCreateMeal(req, res) {
     }
 }
 
+async function httpDeleteMeal(req, res) {
+    try {
+        const userId = req.body.userId;
+        const id = Number(req.params.id);
+
+        const meal = await ifMealExist(id);
+        if (!meal) {
+            return res.status(404).json({
+                error: 'Meal not found',
+            });
+        }
+        if (meal.user !== userId) {
+            return res.status(404).json({
+                error: 'Access Denied',
+            });
+        }
+
+        await deleteMeal(id);
+    }
+    catch (e) {
+        console.log(e, "ERROR")
+        return res.status(500).json({
+            error: 'Internal server error ',
+        });
+    }
+}
 
 module.exports = {
-    httpCreateMeal
+    httpCreateMeal,
+    httpDeleteMeal,
+    httpEditMeal
 }

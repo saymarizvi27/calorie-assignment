@@ -11,12 +11,12 @@ async function createUser(userDetails) {
 }
 
 async function ifUserExists(query) {
-    console.log(query,"query");
+    console.log(query, "query");
     return await UserSchema.findOne(query);
 }
 async function ifUserExistsById(id) {
-    var ObjectId = require('mongoose').Types.ObjectId; 
-    return await UserSchema.findOne({ id : new ObjectId(id) });
+    var ObjectId = require('mongoose').Types.ObjectId;
+    return await UserSchema.findOne({ id: new ObjectId(id) });
 }
 
 
