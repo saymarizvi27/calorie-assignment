@@ -29,17 +29,32 @@ async function ifMealExist(id) {
 
 async function updateMeal(id, text, calorie) {
     var ObjectId = require('mongoose').Types.ObjectId;
-    const updatedMeal = await launches.updateOne(
+    const updatedMeal = await MealScheme.updateOne(
         { id: new ObjectId(id) }, {
-            text: text,
-            calorie: calorie,
-        })
+        text: text,
+        calorie: calorie,
+    })
     return updatedMeal;
 }
+
+async function getAllMeals(skip, limit, userId) {
+    let now = new Date();
+    let startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const launcheList = await MealScheme.find({ createdDate: { $gte: startOfToday }, user: userId }, {
+        '__v': 0
+    })
+        .sort({ createdDate: 1 })
+        .skip(skip)
+        .limit(limit);
+
+    return launcheList;
+}
+
 
 module.exports = {
     createMeal,
     deleteMeal,
     ifMealExist,
-    updateMeal
+    updateMeal,
+    getAllMeals
 }

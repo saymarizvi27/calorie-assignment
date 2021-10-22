@@ -1,8 +1,10 @@
-const { createMeal, deleteMeal, ifMealExist, updateMeal } = require('../models/meal/model.meal');
-
+const { createMeal, deleteMeal, ifMealExist, updateMeal, getAllMeals } = require('../models/meal/model.meal');
+const {
+    getPagination
+} = require('../utility/query');
 async function httpCreateMeal(req, res) {
     try {
-        const userId = req.body.userId;
+        const userId = req.user;
         const mealDetails = req.body;
         if (!mealDetails.text || !mealDetails.calorie) {
             return res.status(400).json({
@@ -10,14 +12,20 @@ async function httpCreateMeal(req, res) {
             });
         }
         mealDetails.user = userId;
-        await createMeal(mealDetails);
-        return res.status(201).json
-            ({
-                data: mealDetails,
-                code: 201,
-                message: 'Meal created succesfully',
-                error: false
+        const meal = await createMeal(mealDetails);
+        if (meal) {
+            return res.status(201).json
+                ({
+                    data: mealDetails,
+                    code: 201,
+                    message: 'Meal created succesfully',
+                    error: false
+                });
+        } else {
+            return res.status(404).json({
+                error: 'Could not create meal ',
             });
+        }
     }
     catch (e) {
         console.log(e, "ERROR")
@@ -29,7 +37,7 @@ async function httpCreateMeal(req, res) {
 
 async function httpDeleteMeal(req, res) {
     try {
-        const userId = req.body.userId;
+        const userId = req.user;
         const id = Number(req.params.id);
 
         const meal = await ifMealExist(id);
@@ -56,7 +64,7 @@ async function httpDeleteMeal(req, res) {
         }
         else {
             return res.status(404).json({
-                error: 'Could not delete user ',
+                error: 'Could not delete meal ',
             });
         }
     }
@@ -70,7 +78,7 @@ async function httpDeleteMeal(req, res) {
 
 async function httpUpdateMeal(req, res) {
     try {
-        const userId = req.body.userId;
+        const userId = req.user;
         const id = Number(req.params.id);
         const mealDetails = req.body;
         if (!mealDetails.text || !mealDetails.calorie) {
@@ -114,9 +122,23 @@ async function httpUpdateMeal(req, res) {
     }
 }
 
+async function httpGetAllMeals(req, res) {
+    const { skip, limit } = getPagination(req.query);
+    const userId = req.user;
+    const allMeals = await getAllMeals(skip, limit, userId);
+    const total = allMeals.reduce(function (accumVariable, curValue) {
+        return accumVariable + curValue.calorie
+        }, 0);
+    const mealsResponse = {
+        total:total,
+        data: allMeals
+    }
+    return res.status(200).json(mealsResponse);
+}
+
 module.exports = {
     httpCreateMeal,
     httpDeleteMeal,
     httpUpdateMeal,
-    // httpGetMeal
+    httpGetAllMeals
 }
