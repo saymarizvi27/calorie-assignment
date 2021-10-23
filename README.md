@@ -1,7 +1,7 @@
 # calorie-assignment
 calculates the total calorie taken by user . Backend on nodejs and front end on react js 
 
-![Capture](Capture.png)
+![Capture](src="calorie-assignment/image.PNGCapture.png")
 
 POST-MAN-COLLECTION
 https://go.postman.co/workspace/My-Workspace~e638923d-4420-41d8-876f-bf5fc36b42ab/collection/6297340-5e067a59-f983-49b8-adb1-f965cf19beb2
