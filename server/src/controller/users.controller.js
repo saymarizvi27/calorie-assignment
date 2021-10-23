@@ -81,7 +81,7 @@ async function httpUserLogin(req, res) {
 
 async function httpUserDetails(req, res) {
     try {
-        const userId = req.user;
+        let userId = req.user;
         const user = await ifUserExistsById(userId);
         if (user) {
             return res.status(200).json

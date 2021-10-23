@@ -14,7 +14,7 @@ async function createMeal(meal) {
 async function deleteMeal(id) {
     try {
         var ObjectId = require('mongoose').Types.ObjectId;
-        return await MealScheme.findOneAndDelete({ id: new ObjectId(id) });
+        return await MealScheme.findOneAndDelete({ _id: new ObjectId(id) });
     }
     catch (err) {
         console.error(`Could not delete meal ${err}`)
@@ -23,14 +23,14 @@ async function deleteMeal(id) {
 
 async function ifMealExist(id) {
     var ObjectId = require('mongoose').Types.ObjectId;
-    return await MealScheme.findOne({ id: new ObjectId(id) });
+    return await MealScheme.findOne({ _id: new ObjectId(id) });
 }
 
 
 async function updateMeal(id, text, calorie) {
     var ObjectId = require('mongoose').Types.ObjectId;
     const updatedMeal = await MealScheme.updateOne(
-        { id: new ObjectId(id) }, {
+        { _id: new ObjectId(id) }, {
         text: text,
         calorie: calorie,
     })

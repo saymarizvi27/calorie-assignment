@@ -38,7 +38,7 @@ async function httpCreateMeal(req, res) {
 async function httpDeleteMeal(req, res) {
     try {
         const userId = req.user;
-        const id = Number(req.params.id);
+        const id = req.params.id;
 
         const meal = await ifMealExist(id);
         if (!meal) {
@@ -46,7 +46,7 @@ async function httpDeleteMeal(req, res) {
                 error: 'Meal not found',
             });
         }
-        if (meal.user !== userId) {
+        if (meal.user.toString()!== userId) {
             return res.status(403).json({
                 error: 'Access Denied',
             });
@@ -76,6 +76,38 @@ async function httpDeleteMeal(req, res) {
     }
 }
 
+async function httpGetMeals(req, res) {
+    try {
+        const userId = req.user;
+        const id = req.params.id;
+
+        const meal = await ifMealExist(id);
+        if (!meal) {
+            return res.status(404).json({
+                error: 'Meal not found',
+            });
+        }
+        if (meal.user.toString()!== userId) {
+            return res.status(403).json({
+                error: 'Access Denied',
+            });
+        }
+        return res.status(201).json
+        ({
+            data: meal,
+            code: 200,
+            message: 'Meal found',
+            error: false
+        });
+    }
+    catch (e) {
+        console.log(e, "ERROR")
+        return res.status(500).json({
+            error: 'Internal server error ',
+        });
+    }
+}
+
 async function httpUpdateMeal(req, res) {
     try {
         const userId = req.user;
@@ -92,7 +124,7 @@ async function httpUpdateMeal(req, res) {
                 error: 'Meal not found',
             });
         }
-        if (meal.user !== userId) {
+        if (meal.user.toString()!== userId) {
             return res.status(403).json({
                 error: 'Access Denied',
             });
@@ -140,5 +172,6 @@ module.exports = {
     httpCreateMeal,
     httpDeleteMeal,
     httpUpdateMeal,
-    httpGetAllMeals
+    httpGetAllMeals,
+    httpGetMeals
 }
