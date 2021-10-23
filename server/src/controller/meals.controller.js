@@ -111,7 +111,7 @@ async function httpGetMeals(req, res) {
 async function httpUpdateMeal(req, res) {
     try {
         const userId = req.user;
-        const id = Number(req.params.id);
+        const id = req.params.id;
         const mealDetails = req.body;
         if (!mealDetails.text || !mealDetails.calorie) {
             return res.status(400).json({
@@ -134,7 +134,7 @@ async function httpUpdateMeal(req, res) {
         if (updatedMeal) {
             return res.status(201).json
                 ({
-                    data: updatedMeal,
+                    data: '',
                     code: 200,
                     message: 'Meal updated succesfully',
                     error: false
