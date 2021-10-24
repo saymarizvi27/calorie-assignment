@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import {Link, Redirect} from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import Header from "../elements/header";
 import Sidebar from "../elements/sidebar";
 import 'react-notifications/lib/notifications.css';
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 
 export default class EditPage extends Component {
 
@@ -17,46 +17,58 @@ export default class EditPage extends Component {
     state = {
         id: '',
         redirect: false,
-        isLoading: false
+        isLoading: false,
+        error: false,
+        success: false,
     };
 
     componentDidMount() {
         let browser_url = new URL(window.location.href);
-        let search_params = browser_url.searchParams; 
+        let search_params = browser_url.searchParams;
         const id = search_params.get('id');
-        this.setState({ id : id });
+        this.setState({ id: id });
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios.get(this.url + '/'  + id)
+        axios.get(this.url + '/' + id)
             .then(response => {
                 const meal = response.data.data;
-                this.setState({id: meal._id });
+                this.setState({ id: meal._id });
                 document.getElementById('inputMeal').value = meal.text;
                 document.getElementById('inputCalorie').value = meal.calorie;
             })
             .catch(error => {
-                this.setState({ toDashboard: true });
-                console.log(error);
+                this.setState({ error: true });
+                this.setState({ error: false });
+                setTimeout(() => {
+                    this.setState({ toDashboard: true });
+                }, 1000);
             });
-        
+
     }
 
     handleSubmit = event => {
         event.preventDefault();
-        this.setState({isLoading: true});
+        this.setState({ isLoading: true });
         const token = localStorage.getItem('token');
-        const url = 'http://localhost:8009/v1/meal/'+ this.state.id;
+        const url = 'http://localhost:8009/v1/meal/' + this.state.id;
         const calorie = document.getElementById('inputCalorie').value;
         const text = document.getElementById('inputMeal').value;
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('token');
-        axios.put(url, { calorie: calorie, text: text})
+        axios.put(url, { calorie: calorie, text: text })
             .then(result => {
                 if (result.data) {
-                    this.setState({redirect: true, isLoading: false})
+                    this.setState({ isLoading: false, success: true });
+                    this.setState({ success: false });
+                    setTimeout(() => {
+                        this.setState({ redirect: true });
+                    }, 1000);
                 }
             })
             .catch(error => {
-                this.setState({ toDashboard: true });
-                console.log(error);
+                this.setState({ error: true });
+                this.setState({ error: false });
+                setTimeout(() => {
+                    this.setState({ toDashboard: true });
+                }, 1000);
             });
     };
 
@@ -71,11 +83,16 @@ export default class EditPage extends Component {
         if (this.state.toDashboard === true) {
             return <Redirect to='/index' />
         }
+        const successNotification = this.state.success;
+        const errorNotification = this.state.error;
         return (
             <div>
-                <Header/>
+                <Header />
                 <div id="wrapper">
-                <Sidebar></Sidebar>
+                    <Sidebar></Sidebar>
+                    {errorNotification === true? NotificationManager.error('Error', 'Error in editing', 1) : ""}
+                    {successNotification === true? NotificationManager.success('Success', 'Meal updated sucessfully', 1) : ""}
+                    <NotificationContainer />
                     <div id="content-wrapper">
                         <div className="container-fluid">
                             <ol className="breadcrumb">
@@ -113,7 +130,6 @@ export default class EditPage extends Component {
                                                 <span></span>
                                             )}
                                         </button>
-                                        <NotificationContainer/>
                                     </form>
                                     {this.renderRedirect()}
                                 </div>
@@ -133,5 +149,3 @@ export default class EditPage extends Component {
         );
     }
 }
-
-

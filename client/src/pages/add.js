@@ -3,13 +3,16 @@ import Header from "../elements/header";
 import Sidebar from "../elements/sidebar";
 import {Link, Redirect} from "react-router-dom";
 import axios from 'axios';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 
 export default class AddPage extends Component {
 
     state = {
         redirect: false,
         toDashboard: false,
-        isLoading: false
+        isLoading: false,
+        errorAdd: false,
+        successAdd: false,
     };
 
     handleSubmit = event => {
@@ -25,13 +28,19 @@ export default class AddPage extends Component {
         bodyFormData.set('text', text);
         axios.post(url, bodyFormData)
             .then(result => {
-                if (result.data) {
-                    this.setState({redirect: true, isLoading: false})
-                }
+                this.setState({ isLoading: false, successAdd: true });
+                this.setState({ successAdd: false });
+                    setTimeout(() => {
+                        this.setState({ redirect: true });
+                    }, 1000);
             })
             .catch(error => {
-                this.setState({ toDashboard: true ,isLoading: false});
                 console.log(error);
+                this.setState({ errorAdd: true });
+                this.setState({ errorAdd: false });
+                setTimeout(() => {
+                    this.setState({ toDashboard: true });
+                }, 2000);
             });
     };
 
@@ -46,11 +55,16 @@ export default class AddPage extends Component {
         if (this.state.toDashboard === true) {
             return <Redirect to='/index' />
         }
+        const successNotificationAdd = this.state.successAdd;
+        const errorNotificationAdd = this.state.errorAdd;
         return (
             <div>
                 <Header/>
                 <div id="wrapper">
                 <Sidebar></Sidebar>
+                    {errorNotificationAdd ? NotificationManager.error('Error', 'Error in adding', 1) : ""}
+                    {successNotificationAdd ? NotificationManager.success('Success', 'Meal added sucessfully', 1) : ""}
+                    <NotificationContainer />
                     <div id="content-wrapper">
                         <div className="container-fluid">
                             <ol className="breadcrumb">
@@ -93,7 +107,7 @@ export default class AddPage extends Component {
                                 </div>
                             </div>
                         </div>
-
+                      
                         <footer className="sticky-footer">
                             <div className="container my-auto">
                                 <div className="copyright text-center my-auto">

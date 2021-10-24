@@ -3,6 +3,7 @@ import Header from "../elements/header";
 import Sidebar from "../elements/sidebar";
 import { Link, Redirect } from 'react-router-dom';
 import axios from 'axios';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 
 export default class Index extends Component {
     state = {
@@ -10,6 +11,8 @@ export default class Index extends Component {
         toDashboard: false,
         isLoading: false,
         total: 0,
+        errorDelete: false,
+        successDelete: false,
     };
 
     constructor(props) {
@@ -38,11 +41,18 @@ export default class Index extends Component {
         axios.delete(this.url + '/' + event.target.value)
             .then(response => {
                 this.componentDidMount();
-                this.setState({ isLoading: true })
+                this.setState({successDelete: true });
+                this.setState({successDelete: false });
+                this.setState({ isLoading: true });
+            
             })
             .catch(error => {
                 console.log(error.toString());
-                this.setState({ toDashboard: true });
+                this.setState({errorDelete: true });
+                this.setState({errorDelete: false });
+                setTimeout(() => {
+                    this.setState({ toDashboard: true });
+                }, 1000);
             });
     };
 
@@ -50,11 +60,16 @@ export default class Index extends Component {
         if (this.state.toDashboard === true) {
             return <Redirect to='/' />
         }
+        const successNotificationDelete = this.state.successDelete;
+        const errorNotificationDelete = this.state.errorDelete;
         return (
             <div>
                 <Header />
                 <div id="wrapper">
                     <Sidebar />
+                    {errorNotificationDelete ? NotificationManager.error('Error', 'Could not delete', 1) : ""}
+                    {successNotificationDelete ? NotificationManager.success('Success', 'Meal deleted successfully', 1) : ""}
+                    <NotificationContainer />
                     <div id="content-wrapper">
                         <div className="container-fluid">
                             <ol className="breadcrumb">
