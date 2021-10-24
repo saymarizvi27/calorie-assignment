@@ -1,0 +1,25 @@
+{
+  "name": "calorie-assignment",
+  "version": "1.0.0",
+  "description": "calculates the total calorie taken by user . Backend on nodejs and front end on react js",
+  "main": "index.js",
+  "scripts": {
+    "install-server": "cd server && npm install",
+    "install-client": "cd client && npm install",
+    "install": "npm run install-server && npm run install-client",
+    "test": "npm test --prefix server && npm test --prefix client",
+    "client": "npm start --prefix client",
+    "server": "npm run watch --prefix server",
+    "start": "concurrently \"npm run server\"  \"npm run client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saymarizvi27/calorie-assignment.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/saymarizvi27/calorie-assignment/issues"
+  },
+  "homepage": "https://github.com/saymarizvi27/calorie-assignment#readme"
+}
