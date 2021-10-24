@@ -3,6 +3,32 @@ calculates the total calorie taken by user . Backend on nodejs and front end on 
 
 ![Capture](/Capture.PNG)
 
+
+#Commands 
+
+### Getting Started
+
+To get started you can simply clone the repo and install the dependencies in the root folder
+
+| Steps   |with [NPM](https://www.npmjs.com/) |
+| ------- | --------------------------------- | 
+| Install |`npm install`                      |
+| Run     |`npm run dev`                      |
+
+Runs the app in the development mode.<br />
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+
+can use the package json 
+
+#run script 
+npm install 
+npm start
+
+In server directory made .env file public for assignment purpose-only
+
+
+
 POST-MAN-COLLECTION
 https://go.postman.co/workspace/My-Workspace~e638923d-4420-41d8-876f-bf5fc36b42ab/collection/6297340-5e067a59-f983-49b8-adb1-f965cf19beb2
 
